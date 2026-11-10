@@ -1,0 +1,14 @@
+{
+	"admin/network/static-lease": {
+		"title": "DHCP Static Leases",
+		"order": 31,
+		"action": {
+			"type": "view",
+			"path": "static-lease"
+		},
+		"depends": {
+			"acl": [ "luci-app-static-lease" ],
+			"uci": { "dhcp": true }
+		}
+	}
+}

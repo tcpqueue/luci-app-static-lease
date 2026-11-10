@@ -1,0 +1,128 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Assign fixed IP addresses to DHCP clients and optionally hand out a different gateway and DNS servers to each of them."
+msgstr "为 DHCP 客户端分配固定 IP，并可为每台设备单独下发网关和 DNS。"
+
+msgid "Auto"
+msgstr "自动"
+
+msgid "Clients that currently hold a DHCP lease from this device. Use \"Make static\" to turn a lease into a static lease."
+msgstr "当前从本机获取到 DHCP 地址的终端。点击“转为静态”即可把动态租约转为静态分配。"
+
+msgid "Remark"
+msgstr "备注"
+
+msgid "DHCP Clients"
+msgstr "DHCP 终端列表"
+
+msgid "DHCP Static Leases"
+msgstr "DHCP 静态分配"
+
+
+msgid "Default"
+msgstr "默认"
+
+msgid "Dynamic"
+msgstr "动态"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Edit static lease"
+msgstr "编辑静态分配"
+
+msgid "Enable"
+msgstr "状态"
+
+msgid "Gateway"
+msgstr "网关"
+
+msgid "Generated automatically when a gateway or DNS server is set."
+msgstr "设置网关或 DNS 后自动生成。"
+
+msgid "Host-specific lease time, e.g. <code>5m</code>, <code>3h</code>, <code>7d</code> or <code>infinite</code>."
+msgstr "单独的租期，例如 <code>5m</code>、<code>3h</code>、<code>7d</code> 或 <code>infinite</code>。"
+
+msgid "Grant access to DHCP static leases"
+msgstr "允许访问 DHCP 静态分配"
+
+msgid "Hostname"
+msgstr "主机名称"
+
+msgid "Client IP"
+msgstr "终端 IP"
+
+msgid "Ignore (do not answer)"
+msgstr "忽略（不响应该终端）"
+
+msgid "Bound interface"
+msgstr "绑定接口"
+
+msgid "Lease time"
+msgstr "租期"
+
+msgid "Lease time remaining"
+msgstr "剩余租期"
+
+msgid "Leave both DNS fields empty to use the default DNS servers of the DHCP server."
+msgstr "首选、备选 DNS 都留空时使用 DHCP 服务器默认的 DNS。"
+
+msgid "Leave empty to use the default gateway of the DHCP server."
+msgstr "留空则使用 DHCP 服务器默认的网关。"
+
+msgid "Client MAC"
+msgstr "终端 MAC"
+
+msgid "Make static"
+msgstr "转为静态"
+
+msgid "One of hostname or MAC address must be specified!"
+msgstr "主机名称和 MAC 地址至少要填一个！"
+
+msgid "Determined automatically from the IP address: a static lease only applies on the interface whose subnet contains it."
+msgstr "根据终端 IP 自动判断：静态分配只在 IP 所属网段的接口上生效。"
+
+msgid "Please fill in the primary DNS first"
+msgstr "请先填写首选 DNS"
+
+msgid "Primary DNS"
+msgstr "首选 DNS"
+
+msgid "Secondary DNS"
+msgstr "备选 DNS"
+
+msgid "Static"
+msgstr "静态"
+
+msgid "Static Leases"
+msgstr "静态分配列表"
+
+msgid "Tag"
+msgstr "标签"
+
+msgid "The IP address %h is already used by another static lease"
+msgstr "IP 地址 %h 已被其他静态分配使用"
+
+msgid "The MAC address %h is already used by another static lease"
+msgstr "MAC 地址 %h 已被其他静态分配使用"
+
+msgid "The required dnsmasq tag (<code>networkid</code>) is created and removed automatically. Everything is stored as standard OpenWrt configuration in <code>/etc/config/dhcp</code>, so the entries stay valid without this application."
+msgstr "所需的 dnsmasq 标签（<code>networkid</code>）会自动创建和删除。所有内容都以 OpenWrt 原生格式保存在 <code>/etc/config/dhcp</code>，卸载本插件后配置依然有效。"
+
+msgid "There are no active leases"
+msgstr "没有活动的租约"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "expired"
+msgstr "已过期"

@@ -1,0 +1,22 @@
+{
+	"luci-app-static-lease": {
+		"description": "Grant access to DHCP static leases",
+		"read": {
+			"ubus": {
+				"luci-rpc": [
+					"getHostHints",
+					"getDHCPLeases"
+				]
+			},
+			"uci": [
+				"dhcp",
+				"network"
+			]
+		},
+		"write": {
+			"uci": [
+				"dhcp"
+			]
+		}
+	}
+}

@@ -1,0 +1,183 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:276
+msgid "Add"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:266
+msgid ""
+"Assign fixed IP addresses to DHCP clients and optionally hand out a "
+"different gateway and DNS servers to each of them."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:369
+msgid "Auto"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:365
+msgid "Bound interface"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:295
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:418
+msgid "Client IP"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:324
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:419
+msgid "Client MAC"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:488
+msgid ""
+"Clients that currently hold a DHCP lease from this device. Use \"Make "
+"static\" to turn a lease into a static lease."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:486
+msgid "DHCP Clients"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:265
+#: package/luci-app-static-lease/root/usr/share/luci/menu.d/luci-app-static-lease.json:3
+msgid "DHCP Static Leases"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:353
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:356
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:375
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:378
+msgid "Default"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:366
+msgid ""
+"Determined automatically from the IP address: a static lease only applies on "
+"the interface whose subnet contains it."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:467
+msgid "Dynamic"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:437
+msgid "Edit"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:275
+msgid "Edit static lease"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:397
+msgid "Enable"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:350
+msgid "Gateway"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:408
+msgid "Generated automatically when a gateway or DNS server is set."
+msgstr ""
+
+#: package/luci-app-static-lease/root/usr/share/rpcd/acl.d/luci-app-static-lease.json:3
+msgid "Grant access to DHCP static leases"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:403
+msgid ""
+"Host-specific lease time, e.g. <code>5m</code>, <code>3h</code>, <code>7d</"
+"code> or <code>infinite</code>."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:278
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:417
+msgid "Hostname"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:297
+msgid "Ignore (do not answer)"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:402
+msgid "Lease time"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:420
+msgid "Lease time remaining"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:373
+msgid ""
+"Leave both DNS fields empty to use the default DNS servers of the DHCP "
+"server."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:351
+msgid "Leave empty to use the default gateway of the DHCP server."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:459
+msgid "Make static"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:304
+msgid "One of hostname or MAC address must be specified!"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:388
+msgid "Please fill in the primary DNS first"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:372
+msgid "Primary DNS"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:393
+msgid "Remark"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:381
+msgid "Secondary DNS"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:467
+msgid "Static"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:269
+msgid "Static Leases"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:407
+msgid "Tag"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:314
+msgid "The IP address %h is already used by another static lease"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:341
+msgid "The MAC address %h is already used by another static lease"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:267
+msgid ""
+"The required dnsmasq tag (<code>networkid</code>) is created and removed "
+"automatically. Everything is stored as standard OpenWrt configuration in "
+"<code>/etc/config/dhcp</code>, so the entries stay valid without this "
+"application."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:472
+msgid "There are no active leases"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:421
+msgid "Type"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:236
+msgid "expired"
+msgstr ""
