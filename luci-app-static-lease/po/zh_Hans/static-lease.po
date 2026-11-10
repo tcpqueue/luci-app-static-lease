@@ -126,3 +126,102 @@ msgstr "类型"
 
 msgid "expired"
 msgstr "已过期"
+
+msgid "%d to add, %d to update, %d skipped."
+msgstr "新增 %d 条，更新 %d 条，跳过 %d 条。"
+
+msgid "Action"
+msgstr "操作"
+
+msgid "Activate"
+msgstr "启用"
+
+msgid "Activated"
+msgstr "已启用"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "DNS"
+msgstr "DNS"
+
+msgid "Deactivate"
+msgstr "停用"
+
+msgid "Deactivated"
+msgstr "已停用"
+
+msgid "Delete %d selected static lease(s)?"
+msgstr "确定删除选中的 %d 条静态分配？"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Export"
+msgstr "导出"
+
+msgid "IP address already used by %s"
+msgstr "IP 已被 %s 使用"
+
+msgid "Import finished: %d added, %d updated, %d skipped. Click \"Save & Apply\" to activate the changes."
+msgstr "导入完成：新增 %d 条，更新 %d 条，跳过 %d 条。点击“保存并应用”后生效。"
+
+msgid "Import"
+msgstr "导入"
+
+msgid "Line %d skipped: %s"
+msgstr "第 %d 行已跳过：%s"
+
+msgid "Merge into current data"
+msgstr "合并到当前数据"
+
+msgid "Merge: entries with the same MAC address are updated and new ones are added. Without merging, all current static leases are replaced by the file."
+msgstr "合并：MAC 相同的条目会被更新，其余新增。不合并：先删除当前全部静态分配，再导入文件内容。"
+
+msgid "New"
+msgstr "新增"
+
+msgid "Not merging: all %d current static leases will be deleted first."
+msgstr "未勾选合并：将先删除当前全部 %d 条静态分配。"
+
+msgid "Please select at least one entry first"
+msgstr "请先勾选至少一条"
+
+msgid "Select a CSV file exported from iKuai (DHCP server → DHCP static allocation → Export)."
+msgstr "选择从爱快导出的 CSV 文件（DHCP 服务端 → DHCP 静态分配 → 导出）。"
+
+msgid "Select all"
+msgstr "全选"
+
+msgid "Skip"
+msgstr "跳过"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "The file is empty"
+msgstr "文件是空的"
+
+msgid "Unable to read the file"
+msgstr "无法读取文件"
+
+msgid "Unrecognized file: expected an iKuai CSV export with the columns ip_addr and mac"
+msgstr "无法识别的文件：需要爱快导出的 CSV（包含 ip_addr 和 mac 列）"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "duplicate IP address in file (line %d)"
+msgstr "文件内 IP 重复（第 %d 行）"
+
+msgid "duplicate MAC address in file (line %d)"
+msgstr "文件内 MAC 重复（第 %d 行）"
+
+msgid "invalid IP address"
+msgstr "IP 地址无效"
+
+msgid "invalid MAC address"
+msgstr "MAC 地址无效"
+
+msgid "invalid gateway or DNS address"
+msgstr "网关或 DNS 地址无效"

@@ -10,11 +10,22 @@ LuCI 原生的“静态地址分配”只能固定 IP。想给某台设备下发
 
 ## 功能
 
-- 静态分配列表：主机名称、终端 IP、终端 MAC、网关、接口、首选 DNS、备选 DNS、备注、启用开关
+- 静态分配列表：主机名称、终端 IP、终端 MAC、网关、接口、首选 DNS、备选 DNS、备注、状态
+- 每行编辑 / 启用·停用 / 删除；勾选多行后批量启用、停用、删除
+- **兼容爱快的导入导出**（CSV），见下文
 - 网关、DNS 留空时使用 DHCP 服务器（接口）的默认值；两者可以只设其中一个
 - DHCP 终端列表：实时显示当前租约，一键“转为静态”
 - 接口列根据 IP 自动判断（dnsmasq 本来就只在 IP 所属网段的接口上应用静态分配）
 - 中文界面
+
+## 爱快导入导出
+
+- **导入**：在爱快 *DHCP 服务端 → DHCP 静态分配 → 导出* 得到 `dhcp_static.csv`，在插件里点“导入”选择该文件。导入前会显示预览，每行标明新增、更新或跳过及原因。
+  - 勾选“合并到当前数据”（默认）：MAC 相同的条目会被更新，其余新增；IP 已被另一台设备占用的行会跳过。
+  - 不勾选：先删除当前全部静态分配，再导入文件内容。
+  - `(none)` 视为没有主机名；dnsmasq 不接受的主机名（含中文、空格等）会放进备注；爱快的接口列（`lan1`/`auto`）会忽略，接口由 IP 自动决定。
+  - 导入只是暂存，点“保存并应用”后才生效。
+- **导出**：生成与爱快相同格式的 CSV（同样的列、引号、URL 编码和 CRLF 换行，接口写 `auto`），可以直接导回爱快。
 
 ## 原理与兼容性
 
@@ -84,6 +95,8 @@ OpenWrt 23.05 / 24.10 用的是同一套 dnsmasq 初始化逻辑（host 的 `net
 ## 限制
 
 - 只处理 IPv4（DHCPv4 的选项 3 和 6）。
+- 导入导出只支持爱快的 CSV 格式（不支持 TXT）。
+- 一条静态分配有多个 MAC 时，导出只写第一个。
 - 已经拿到租约的设备要等续租或重新连接后才会拿到新的网关和 DNS。
 
 ## 许可证
@@ -97,5 +110,7 @@ Apache-2.0
 LuCI app for OpenWrt / ImmortalWrt: DHCP static leases with an optional **per-host gateway and DNS servers**.
 
 It writes plain `/etc/config/dhcp` `host` sections, using the host's own `networkid` + `list dhcp_option`, which `/etc/init.d/dnsmasq` already supports. The tag name is generated automatically from the MAC address, so you never have to create `config tag` sections by hand. Hosts without overrides keep using the interface defaults, and options this app does not manage are preserved. Removing the app leaves a valid configuration.
+
+It can also import and export the iKuai "DHCP static allocation" CSV format (merge or replace), and supports bulk enable / disable / delete.
 
 Menu: **Network → DHCP Static Leases**. License: Apache-2.0.

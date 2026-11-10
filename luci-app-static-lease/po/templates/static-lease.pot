@@ -1,83 +1,138 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:276
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:614
+msgid "%d to add, %d to update, %d skipped."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:587
+msgid "Action"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:718
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:727
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1004
+msgid "Activate"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:601
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:869
+msgid "Activated"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:711
 msgid "Add"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:266
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1028
 msgid ""
 "Assign fixed IP addresses to DHCP clients and optionally hand out a "
 "different gateway and DNS servers to each of them."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:369
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:836
 msgid "Auto"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:365
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:832
 msgid "Bound interface"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:295
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:418
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:683
+msgid "Cancel"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:582
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:762
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:893
 msgid "Client IP"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:324
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:419
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:583
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:791
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:894
 msgid "Client MAC"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:488
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1038
 msgid ""
 "Clients that currently hold a DHCP lease from this device. Use \"Make "
 "static\" to turn a lease into a static lease."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:486
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1036
 msgid "DHCP Clients"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:265
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1026
 #: package/luci-app-static-lease/root/usr/share/luci/menu.d/luci-app-static-lease.json:3
 msgid "DHCP Static Leases"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:353
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:356
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:375
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:378
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:585
+msgid "DNS"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:718
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:727
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1010
+msgid "Deactivate"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:601
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:868
+msgid "Deactivated"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:599
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:600
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:820
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:823
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:842
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:845
 msgid "Default"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:366
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1021
+msgid "Delete"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1016
+msgid "Delete %d selected static lease(s)?"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:833
 msgid ""
 "Determined automatically from the IP address: a static lease only applies on "
 "the interface whose subnet contains it."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:467
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:942
 msgid "Dynamic"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:437
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:912
 msgid "Edit"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:275
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:710
 msgid "Edit static lease"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:397
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:872
 msgid "Enable"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:350
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:998
+msgid "Export"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:584
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:817
 msgid "Gateway"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:408
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:883
 msgid "Generated automatically when a gateway or DNS server is set."
 msgstr ""
 
@@ -85,84 +140,150 @@ msgstr ""
 msgid "Grant access to DHCP static leases"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:403
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:878
 msgid ""
 "Host-specific lease time, e.g. <code>5m</code>, <code>3h</code>, <code>7d</"
 "code> or <code>infinite</code>."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:278
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:417
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:581
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:745
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:892
 msgid "Hostname"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:297
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:443
+msgid "IP address already used by %s"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:764
 msgid "Ignore (do not answer)"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:402
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:673
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:675
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:992
+msgid "Import"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:669
+msgid ""
+"Import finished: %d added, %d updated, %d skipped. Click \"Save & Apply\" to "
+"activate the changes."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:877
 msgid "Lease time"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:420
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:895
 msgid "Lease time remaining"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:373
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:840
 msgid ""
 "Leave both DNS fields empty to use the default DNS servers of the DHCP "
 "server."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:351
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:818
 msgid "Leave empty to use the default gateway of the DHCP server."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:459
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:609
+msgid "Line %d skipped: %s"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:934
 msgid "Make static"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:304
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:678
+msgid "Merge into current data"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:680
+msgid ""
+"Merge: entries with the same MAC address are updated and new ones are added. "
+"Without merging, all current static leases are replaced by the file."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:557
+msgid "New"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:619
+msgid "Not merging: all %d current static leases will be deleted first."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:771
 msgid "One of hostname or MAC address must be specified!"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:388
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:855
 msgid "Please fill in the primary DNS first"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:372
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:968
+msgid "Please select at least one entry first"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:839
 msgid "Primary DNS"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:393
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:860
 msgid "Remark"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:381
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:848
 msgid "Secondary DNS"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:467
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:676
+msgid ""
+"Select a CSV file exported from iKuai (DHCP server → DHCP static allocation "
+"→ Export)."
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:988
+msgid "Select all"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:559
+msgid "Skip"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:942
 msgid "Static"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:269
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1032
 msgid "Static Leases"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:407
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:586
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:864
+msgid "Status"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:882
 msgid "Tag"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:314
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:781
 msgid "The IP address %h is already used by another static lease"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:341
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:808
 msgid "The MAC address %h is already used by another static lease"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:267
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:340
+msgid "The file is empty"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:1030
 msgid ""
 "The required dnsmasq tag (<code>networkid</code>) is created and removed "
 "automatically. Everything is stored as standard OpenWrt configuration in "
@@ -170,14 +291,48 @@ msgid ""
 "application."
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:472
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:947
 msgid "There are no active leases"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:421
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:896
 msgid "Type"
 msgstr ""
 
-#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:236
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:649
+msgid "Unable to read the file"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:348
+msgid ""
+"Unrecognized file: expected an iKuai CSV export with the columns ip_addr and "
+"mac"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:558
+msgid "Update"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:422
+msgid "duplicate IP address in file (line %d)"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:416
+msgid "duplicate MAC address in file (line %d)"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:242
 msgid "expired"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:371
+msgid "invalid IP address"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:369
+msgid "invalid MAC address"
+msgstr ""
+
+#: package/luci-app-static-lease/htdocs/luci-static/resources/view/static-lease.js:373
+msgid "invalid gateway or DNS address"
 msgstr ""

@@ -191,10 +191,19 @@ function syncHostOptions(section, sid) {
 		return (v == null) ? fallback : String(v).trim();
 	};
 
-	var gw = fv('_gateway', getGateway(sid)),
-	    dns = getDns(sid),
-	    d1 = fv('_dns1', dns[0] || ''),
-	    d2 = fv('_dns2', dns[1] || '');
+	var dns = getDns(sid),
+	    macs = section.formvalue(sid, 'mac');
+
+	setHostOptions(sid,
+		fv('_gateway', getGateway(sid)),
+		fv('_dns1', dns[0] || ''),
+		fv('_dns2', dns[1] || ''),
+		(macs != null) ? L.toArray(macs) : list(sid, 'mac'),
+		section.formvalue(sid, 'name') || uci.get('dhcp', sid, 'name'));
+}
+
+function setHostOptions(sid, gw, d1, d2, macs, name) {
+	gw = gw || ''; d1 = d1 || ''; d2 = d2 || '';
 
 	var opts = list(sid, 'dhcp_option').filter(function(o) {
 		return !isGatewayOption(o) && !isDnsOption(o);
@@ -216,10 +225,7 @@ function syncHostOptions(section, sid) {
 	var nid = uci.get('dhcp', sid, 'networkid');
 
 	if (opts.length && !nid) {
-		var macs = section.formvalue(sid, 'mac');
-		macs = (macs != null) ? L.toArray(macs) : list(sid, 'mac');
-		uci.set('dhcp', sid, 'networkid',
-			generateNetworkId(sid, macs, section.formvalue(sid, 'name') || uci.get('dhcp', sid, 'name')));
+		uci.set('dhcp', sid, 'networkid', generateNetworkId(sid, macs || [], name));
 	}
 	else if (!opts.length && nid && nid.indexOf(ID_PREFIX) == 0) {
 		uci.unset('dhcp', sid, 'networkid');
@@ -246,6 +252,288 @@ function findHostByMac(mac) {
 	})[0];
 }
 
+/*
+ * iKuai "DHCP static allocation" CSV import / export.
+ *
+ *   id,enabled,interface,ip_addr,mac,cl_name,comment,gateway,dns1,dns2
+ *   1,"yes","lan1","192.168.1.20","aa:bb:cc:dd:ee:ff","phone","","192.168.1.2","",""
+ *
+ * cl_name and comment are URL-encoded, "(none)" means no hostname, lines end
+ * with CRLF.
+ */
+var IKUAI_COLUMNS = [ 'id', 'enabled', 'interface', 'ip_addr', 'mac', 'cl_name', 'comment', 'gateway', 'dns1', 'dns2' ],
+    RE_MAC = /^[0-9A-F]{2}(:[0-9A-F]{2}){5}$/,
+    RE_IP4 = /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}$/,
+    RE_HOSTNAME = /^[A-Za-z0-9_]([A-Za-z0-9_.-]{0,62}[A-Za-z0-9_])?$/,
+    RE_BOM = /^﻿/,
+    RE_ENC_EXTRA = /[!'()*]/g,
+    RE_QUOTE = /"/g;
+
+function parseCSV(text) {
+	var rows = [], row = [], field = '', quoted = false, c;
+
+	text = String(text).replace(RE_BOM, '');
+
+	for (var i = 0; i < text.length; i++) {
+		c = text.charAt(i);
+
+		if (quoted) {
+			if (c == '"') {
+				if (text.charAt(i + 1) == '"') { field += '"'; i++; }
+				else quoted = false;
+			}
+			else {
+				field += c;
+			}
+		}
+		else if (c == '"') {
+			quoted = true;
+		}
+		else if (c == ',') {
+			row.push(field);
+			field = '';
+		}
+		else if (c == '\r' || c == '\n') {
+			if (c == '\r' && text.charAt(i + 1) == '\n')
+				i++;
+			row.push(field);
+			rows.push(row);
+			row = [];
+			field = '';
+		}
+		else {
+			field += c;
+		}
+	}
+
+	if (field != '' || row.length) {
+		row.push(field);
+		rows.push(row);
+	}
+
+	return rows.filter(function(r) { return !(r.length == 1 && r[0].trim() == ''); });
+}
+
+function ikuaiDecode(s) {
+	s = String(s || '').trim();
+
+	try { s = decodeURIComponent(s); } catch (e) {}
+
+	return (s == '(none)') ? '' : s;
+}
+
+function ikuaiEncode(s) {
+	return encodeURIComponent(String(s || '')).replace(RE_ENC_EXTRA, function(c) {
+		return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+	});
+}
+
+function csvQuote(v) {
+	return '"' + String(v == null ? '' : v).replace(RE_QUOTE, '""') + '"';
+}
+
+/* Returns { rows: [...], errors: [...] } or throws on an unknown file format. */
+function parseIkuaiCSV(text) {
+	var table = parseCSV(text);
+
+	if (!table.length)
+		throw new Error(_('The file is empty'));
+
+	var head = table[0].map(function(h) { return h.trim().toLowerCase(); }),
+	    col = {};
+
+	head.forEach(function(h, i) { col[h] = i; });
+
+	if (col.ip_addr == null || col.mac == null)
+		throw new Error(_('Unrecognized file: expected an iKuai CSV export with the columns ip_addr and mac'));
+
+	var get = function(r, name) {
+		return (col[name] != null && r[col[name]] != null) ? String(r[col[name]]).trim() : '';
+	};
+
+	var res = { rows: [], errors: [] };
+
+	for (var i = 1; i < table.length; i++) {
+		var r = table[i],
+		    line = i + 1,
+		    mac = normalizeMac(get(r, 'mac').replace(/-/g, ':')),
+		    ip = get(r, 'ip_addr'),
+		    name = ikuaiDecode(get(r, 'cl_name')),
+		    comment = ikuaiDecode(get(r, 'comment')),
+		    gw = get(r, 'gateway'),
+		    d1 = get(r, 'dns1'),
+		    d2 = get(r, 'dns2'),
+		    bad = null;
+
+		if (!RE_MAC.test(mac))
+			bad = _('invalid MAC address');
+		else if (!RE_IP4.test(ip))
+			bad = _('invalid IP address');
+		else if ((gw && !RE_IP4.test(gw)) || (d1 && !RE_IP4.test(d1)) || (d2 && !RE_IP4.test(d2)))
+			bad = _('invalid gateway or DNS address');
+
+		if (bad) {
+			res.errors.push({ line: line, reason: bad });
+			continue;
+		}
+
+		/* dnsmasq only accepts plain host names; keep anything else as remark */
+		if (name && !RE_HOSTNAME.test(name)) {
+			comment = comment ? '%s (%s)'.format(comment, name) : name;
+			name = '';
+		}
+
+		if (!d1 && d2) {
+			d1 = d2;
+			d2 = '';
+		}
+
+		res.rows.push({
+			line: line,
+			mac: mac,
+			ip: ip,
+			name: name,
+			comment: comment,
+			gateway: gw,
+			dns1: d1,
+			dns2: d2,
+			enabled: get(r, 'enabled').toLowerCase() != 'no'
+		});
+	}
+
+	return res;
+}
+
+/* Decide what to do with every imported row. */
+function planImport(rows, merge) {
+	var seenMac = {}, seenIp = {}, hosts = merge ? uci.sections('dhcp', 'host') : [];
+
+	return rows.map(function(r) {
+		var p = { row: r, action: 'add', sid: null, reason: null };
+
+		if (seenMac[r.mac]) {
+			p.action = 'skip';
+			p.reason = _('duplicate MAC address in file (line %d)').format(seenMac[r.mac]);
+			return p;
+		}
+
+		if (seenIp[r.ip]) {
+			p.action = 'skip';
+			p.reason = _('duplicate IP address in file (line %d)').format(seenIp[r.ip]);
+			return p;
+		}
+
+		seenMac[r.mac] = r.line;
+		seenIp[r.ip] = r.line;
+
+		var owner = null, ipOwner = null;
+
+		hosts.forEach(function(h) {
+			if (list(h['.name'], 'mac').some(function(m) { return normalizeMac(m) == r.mac; }))
+				owner = h;
+		});
+
+		hosts.forEach(function(h) {
+			if (h.ip == r.ip && (!owner || h['.name'] != owner['.name']))
+				ipOwner = h;
+		});
+
+		if (ipOwner) {
+			p.action = 'skip';
+			p.reason = _('IP address already used by %s').format(ipOwner.name || list(ipOwner['.name'], 'mac')[0] || ipOwner['.name']);
+		}
+		else if (owner) {
+			p.action = 'update';
+			p.sid = owner['.name'];
+		}
+
+		return p;
+	});
+}
+
+function applyImport(plan, merge) {
+	var count = { add: 0, update: 0, skip: 0, removed: 0 };
+
+	if (!merge) {
+		uci.sections('dhcp', 'host').forEach(function(h) {
+			uci.remove('dhcp', h['.name']);
+			count.removed++;
+		});
+	}
+
+	plan.forEach(function(p) {
+		var r = p.row, sid;
+
+		if (p.action == 'skip') {
+			count.skip++;
+			return;
+		}
+
+		sid = (p.action == 'update') ? p.sid : uci.add('dhcp', 'host');
+
+		uci.set('dhcp', sid, 'mac', [ r.mac ]);
+		uci.set('dhcp', sid, 'ip', r.ip);
+
+		if (r.name) {
+			uci.set('dhcp', sid, 'name', r.name);
+			uci.set('dhcp', sid, 'dns', '1');
+		}
+
+		if (r.comment)
+			uci.set('dhcp', sid, 'comment', r.comment);
+
+		if (r.enabled)
+			uci.unset('dhcp', sid, 'enable');
+		else
+			uci.set('dhcp', sid, 'enable', '0');
+
+		setHostOptions(sid, r.gateway, r.dns1, r.dns2, [ r.mac ], r.name || uci.get('dhcp', sid, 'name'));
+
+		count[p.action]++;
+	});
+
+	return count;
+}
+
+function buildIkuaiCSV() {
+	var lines = [ IKUAI_COLUMNS.join(',') ], n = 1;
+
+	uci.sections('dhcp', 'host').forEach(function(h) {
+		var sid = h['.name'],
+		    mac = list(sid, 'mac')[0],
+		    dns = getDns(sid);
+
+		if (!mac || !RE_IP4.test(h.ip || ''))
+			return;
+
+		lines.push([
+			n++,
+			csvQuote(h.enable == '0' ? 'no' : 'yes'),
+			csvQuote('auto'),
+			csvQuote(h.ip),
+			csvQuote(normalizeMac(mac).toLowerCase()),
+			csvQuote(ikuaiEncode(h.name)),
+			csvQuote(ikuaiEncode(h.comment)),
+			csvQuote(getGateway(sid)),
+			csvQuote(dns[0] || ''),
+			csvQuote(dns[1] || '')
+		].join(','));
+	});
+
+	return lines.join('\r\n') + '\r\n';
+}
+
+function downloadFile(name, content, type) {
+	var blob = new Blob([ content ], { type: type }),
+	    url = URL.createObjectURL(blob),
+	    a = E('a', { 'href': url, 'download': name, 'style': 'display:none' });
+
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	window.setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+}
+
 return view.extend({
 	load: function() {
 		return Promise.all([
@@ -256,24 +544,203 @@ return view.extend({
 		]);
 	},
 
+	showImportDialog: function(m) {
+		var result = null,
+		    error = null,
+		    preview = E('div', { 'style': 'max-height:50vh;overflow:auto;margin:1em 0' }),
+		    merge = E('input', { 'type': 'checkbox', 'checked': 'checked' }),
+		    fileInput = E('input', { 'type': 'file', 'accept': '.csv,text/csv' }),
+		    okBtn;
+
+		var label = function(p) {
+			switch (p.action) {
+			case 'add':    return E('span', { 'style': 'color:#27ae60' }, _('New'));
+			case 'update': return E('span', { 'style': 'color:#2980b9' }, _('Update'));
+			default:       return E('span', { 'style': 'color:#c0392b' }, '%s: %s'.format(_('Skip'), p.reason));
+			}
+		};
+
+		var refresh = function() {
+			okBtn.disabled = true;
+
+			if (error) {
+				dom.content(preview, E('p', { 'class': 'alert-message warning' }, error));
+				return;
+			}
+
+			if (!result) {
+				dom.content(preview, '');
+				return;
+			}
+
+			var plan = planImport(result.rows, merge.checked),
+			    n = { add: 0, update: 0, skip: result.errors.length },
+			    existing = uci.sections('dhcp', 'host').length,
+			    rows = [
+				E('tr', { 'class': 'tr table-titles' }, [
+					E('th', { 'class': 'th' }, _('Hostname')),
+					E('th', { 'class': 'th' }, _('Client IP')),
+					E('th', { 'class': 'th' }, _('Client MAC')),
+					E('th', { 'class': 'th' }, _('Gateway')),
+					E('th', { 'class': 'th' }, _('DNS')),
+					E('th', { 'class': 'th' }, _('Status')),
+					E('th', { 'class': 'th' }, _('Action'))
+				])
+			    ];
+
+			plan.forEach(function(p) {
+				var r = p.row;
+
+				n[p.action]++;
+				rows.push(E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td' }, r.name || (r.comment ? E('em', {}, r.comment) : '-')),
+					E('td', { 'class': 'td' }, r.ip),
+					E('td', { 'class': 'td' }, r.mac),
+					E('td', { 'class': 'td' }, r.gateway || E('em', {}, _('Default'))),
+					E('td', { 'class': 'td' }, [ r.dns1, r.dns2 ].filter(function(e) { return e; }).join(', ') || E('em', {}, _('Default'))),
+					E('td', { 'class': 'td' }, r.enabled ? _('Activated') : _('Deactivated')),
+					E('td', { 'class': 'td' }, label(p))
+				]));
+			});
+
+			result.errors.forEach(function(e) {
+				rows.push(E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td', 'colspan': 7, 'style': 'color:#c0392b' },
+						_('Line %d skipped: %s').format(e.line, e.reason))
+				]));
+			});
+
+			var notes = [
+				E('p', {}, _('%d to add, %d to update, %d skipped.').format(n.add, n.update, n.skip))
+			];
+
+			if (!merge.checked && existing)
+				notes.push(E('p', { 'class': 'alert-message warning' },
+					_('Not merging: all %d current static leases will be deleted first.').format(existing)));
+
+			dom.content(preview, [ E('div', {}, notes), E('table', { 'class': 'table' }, rows) ]);
+
+			okBtn.disabled = !(n.add + n.update > 0);
+		};
+
+		fileInput.addEventListener('change', function() {
+			var file = fileInput.files[0];
+
+			result = error = null;
+
+			if (!file) {
+				refresh();
+				return;
+			}
+
+			var reader = new FileReader();
+
+			reader.onload = function() {
+				try {
+					result = parseIkuaiCSV(reader.result);
+				}
+				catch (e) {
+					error = e.message;
+				}
+
+				refresh();
+			};
+			reader.onerror = function() {
+				error = _('Unable to read the file');
+				refresh();
+			};
+			reader.readAsText(file);
+		});
+
+		merge.addEventListener('change', refresh);
+
+		okBtn = E('button', {
+			'class': 'btn cbi-button cbi-button-positive important',
+			'disabled': 'disabled',
+			'click': ui.createHandlerFn(this, function() {
+				var mergeMode = merge.checked,
+				    count = applyImport(planImport(result.rows, mergeMode), mergeMode),
+				    skipped = count.skip + result.errors.length;
+
+				ui.hideModal();
+
+				return m.save(null, true).then(function() {
+					ui.addNotification(null, E('p', {},
+						_('Import finished: %d added, %d updated, %d skipped. Click "Save & Apply" to activate the changes.')
+							.format(count.add, count.update, skipped)), 'info');
+				});
+			})
+		}, _('Import'));
+
+		var dlg = ui.showModal(_('Import'), [
+			E('p', {}, _('Select a CSV file exported from iKuai (DHCP server → DHCP static allocation → Export).')),
+			E('div', { 'class': 'cbi-value' }, fileInput),
+			E('label', {}, [ merge, ' ', _('Merge into current data') ]),
+			E('div', { 'class': 'cbi-section-descr' },
+				_('Merge: entries with the same MAC address are updated and new ones are added. Without merging, all current static leases are replaced by the file.')),
+			preview,
+			E('div', { 'class': 'right' }, [
+				E('button', { 'class': 'btn', 'click': ui.hideModal }, _('Cancel')),
+				' ',
+				okBtn
+			])
+		]);
+
+		if (dlg && dlg.style) {
+			dlg.style.width = '960px';
+			dlg.style.maxWidth = '95vw';
+		}
+	},
+
 	render: function(data) {
 		var hosts = data[0] || {},
 		    leases = (data[1] || {}).dhcp_leases || [],
 		    subnets = getSubnets(),
 		    m, s, o;
 
-		m = new form.Map('dhcp', _('DHCP Static Leases'),
-			_('Assign fixed IP addresses to DHCP clients and optionally hand out a different gateway and DNS servers to each of them.') + '<br />' +
-			_('The required dnsmasq tag (<code>networkid</code>) is created and removed automatically. Everything is stored as standard OpenWrt configuration in <code>/etc/config/dhcp</code>, so the entries stay valid without this application.'));
+		/* title is rendered by the view so that the toolbar can sit between title and table */
+		m = new form.Map('dhcp');
 
-		s = m.section(form.GridSection, 'host', _('Static Leases'));
+		s = m.section(form.GridSection, 'host');
 		s.addremove = true;
 		s.anonymous = true;
 		s.sortable = true;
 		s.nodescriptions = true;
-		s.max_cols = 9;
+		s.max_cols = 12;
 		s.modaltitle = _('Edit static lease');
 		s.addbtntitle = _('Add');
+
+		s.renderRowActions = function(sid) {
+			var td = form.GridSection.prototype.renderRowActions.call(this, sid),
+			    disabled = (uci.get('dhcp', sid, 'enable') == '0'),
+			    btn = E('button', {
+				'class': 'btn cbi-button cbi-button-neutral',
+				'title': disabled ? _('Activate') : _('Deactivate'),
+				'click': ui.createHandlerFn(this, function() {
+					if (disabled)
+						uci.unset('dhcp', sid, 'enable');
+					else
+						uci.set('dhcp', sid, 'enable', '0');
+
+					return m.save(null, true);
+				})
+			}, disabled ? _('Activate') : _('Deactivate'));
+
+			var edit = td.querySelector('.cbi-button-edit');
+
+			if (edit && edit.parentNode)
+				edit.parentNode.insertBefore(btn, edit.nextSibling);
+			else
+				td.appendChild(btn);
+
+			return td;
+		};
+
+		o = s.option(form.DummyValue, '_select', '');
+		o.modalonly = false;
+		o.textvalue = function(sid) {
+			return E('input', { 'type': 'checkbox', 'class': 'static-lease-select', 'data-sid': sid });
+		};
 
 		o = s.option(form.Value, 'name', _('Hostname'));
 		o.textvalue = function(sid) { return uci.get('dhcp', sid, 'name') || '-'; };
@@ -394,9 +861,17 @@ return view.extend({
 		o.textvalue = function(sid) { return uci.get('dhcp', sid, 'comment') || '-'; };
 		o.rmempty = true;
 
+		o = s.option(form.DummyValue, '_state', _('Status'));
+		o.modalonly = false;
+		o.textvalue = function(sid) {
+			return (uci.get('dhcp', sid, 'enable') == '0')
+				? E('span', { 'style': 'color:#c0392b' }, _('Deactivated'))
+				: E('span', { 'style': 'color:#27ae60' }, _('Activated'));
+		};
+
 		o = s.option(form.Flag, 'enable', _('Enable'));
 		o.default = o.enabled;
-		o.editable = true;
+		o.modalonly = true;
 		o.rmempty = true;
 
 		o = s.option(form.Value, 'leasetime', _('Lease time'),
@@ -480,7 +955,82 @@ return view.extend({
 				});
 			}, 5);
 
-			return E([], [
+			var selected = function() {
+				return Array.prototype.map.call(
+					document.querySelectorAll('.static-lease-select:checked'),
+					function(cb) { return cb.getAttribute('data-sid'); });
+			};
+
+			var bulk = function(fn) {
+				var sids = selected();
+
+				if (!sids.length) {
+					ui.addNotification(null, E('p', _('Please select at least one entry first')), 'warning');
+					return Promise.resolve();
+				}
+
+				sids.forEach(fn);
+				selectAll.checked = false;
+
+				return m.save(null, true);
+			};
+
+			var selectAll = E('input', {
+				'type': 'checkbox',
+				'change': function(ev) {
+					document.querySelectorAll('.static-lease-select').forEach(function(cb) {
+						cb.checked = ev.target.checked;
+					});
+				}
+			});
+
+			var toolbar = E('div', { 'class': 'cbi-section', 'style': 'display:flex;flex-wrap:wrap;gap:.5em;align-items:center' }, [
+				E('label', { 'style': 'margin-right:.5em' }, [ selectAll, ' ', _('Select all') ]),
+				E('button', {
+					'class': 'btn cbi-button cbi-button-action',
+					'click': ui.createHandlerFn(self, function() { return self.showImportDialog(m); })
+				}, _('Import')),
+				E('button', {
+					'class': 'btn cbi-button cbi-button-action',
+					'click': function() {
+						downloadFile('dhcp_static.csv', buildIkuaiCSV(), 'text/csv');
+					}
+				}, _('Export')),
+				E('button', {
+					'class': 'btn cbi-button cbi-button-positive',
+					'click': ui.createHandlerFn(self, function() {
+						return bulk(function(sid) { uci.unset('dhcp', sid, 'enable'); });
+					})
+				}, _('Activate')),
+				E('button', {
+					'class': 'btn cbi-button cbi-button-neutral',
+					'click': ui.createHandlerFn(self, function() {
+						return bulk(function(sid) { uci.set('dhcp', sid, 'enable', '0'); });
+					})
+				}, _('Deactivate')),
+				E('button', {
+					'class': 'btn cbi-button cbi-button-negative',
+					'click': ui.createHandlerFn(self, function() {
+						var n = selected().length;
+
+						if (n && !confirm(_('Delete %d selected static lease(s)?').format(n)))
+							return;
+
+						return bulk(function(sid) { uci.remove('dhcp', sid); });
+					})
+				}, _('Delete'))
+			]);
+
+			return E('div', { 'id': 'static-lease-view' }, [
+				E('style', {}, '#static-lease-view .th { white-space: nowrap } #static-lease-view .cbi-section-actions .btn { margin: 1px } '),
+				E('h2', {}, _('DHCP Static Leases')),
+				E('div', { 'class': 'cbi-map-descr' }, [
+					_('Assign fixed IP addresses to DHCP clients and optionally hand out a different gateway and DNS servers to each of them.'),
+					E('br'),
+					E('span', {}, _('The required dnsmasq tag (<code>networkid</code>) is created and removed automatically. Everything is stored as standard OpenWrt configuration in <code>/etc/config/dhcp</code>, so the entries stay valid without this application.'))
+				]),
+				E('h3', {}, _('Static Leases')),
+				toolbar,
 				mapEl,
 				E('div', { 'class': 'cbi-section' }, [
 					E('h3', {}, _('DHCP Clients')),
